@@ -1,30 +1,41 @@
 package co.pietza.springbootstore.Product;
 
+import java.math.BigDecimal;
+
 public class Product {
 
-    private Integer id;
+    private String id;
 
     private String name;
 
+    private String manufacturer;
+
+    private String catagory;
+
     private String description;
 
-    private Integer unitsInStock;
+    private BigDecimal unitPrice;
+
+    private Long unitsInStock;
 
     public Product(){}
 
 
-    public Product(Integer id, String name, String description, Integer unitsInStock) {
+    public Product(String id, String name, String manufacturer, String catagory, String description, BigDecimal unitPrice, Long unitsInStock) {
         this.id = id;
         this.name = name;
+        this.manufacturer = manufacturer;
+        this.catagory = catagory;
         this.description = description;
+        this.unitPrice = unitPrice;
         this.unitsInStock = unitsInStock;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,12 +55,36 @@ public class Product {
         this.description = description;
     }
 
-    public Integer getUnitsInStock() {
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
+    }
+
+    public Long getUnitsInStock() {
         return unitsInStock;
     }
 
-    public void setUnitsInStock(Integer unitsInStock) {
+    public void setUnitsInStock(Long unitsInStock) {
         this.unitsInStock = unitsInStock;
+    }
+
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getCatagory() {
+        return catagory;
+    }
+
+    public void setCatagory(String catagory) {
+        this.catagory = catagory;
     }
 
     @Override
@@ -58,6 +93,7 @@ public class Product {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", unitPrice='" + unitPrice + '\'' +
                 ", unitsInStock=" + unitsInStock +
                 '}';
     }

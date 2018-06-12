@@ -1,10 +1,12 @@
 package co.pietza.springbootstore.Product;
 
+import co.pietza.springbootstore.exceptions.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -14,6 +16,25 @@ public class productResource {
     private ProductDaoService service;
 
 
+
+    //Created
+    //output return CREATED and return Product
+
+    @PostMapping("/products")
+    public ResponseEntity<Object> createProduct(@RequestBody Product product){
+        Product savedProduct = service.saveProduct(product);
+
+        // Created
+
+        // map loaction of new product
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(savedProduct.getId()).toUri();
+
+        return ResponseEntity.created(location).build();
+    }
 
 
     // retrieveAll
@@ -25,8 +46,11 @@ public class productResource {
 
     // findById
     @GetMapping(path = "/products/{id}")
-    public Product findById(@PathVariable("id") int id){
+    public Product findById(@PathVariable("id") String id){
 
-        return service.findById(id);
+        Product product= service.findById(id);
+
+        if(product==null) throw new ProductNotFoundException("id: "+id);
+        return product;
     }
 }

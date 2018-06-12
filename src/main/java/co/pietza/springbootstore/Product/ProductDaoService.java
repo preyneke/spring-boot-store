@@ -2,6 +2,7 @@ package co.pietza.springbootstore.Product;
 
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,9 +14,9 @@ public class ProductDaoService {
     private static int productCount = 3;
 
     static{
-        products.add(new Product(1,"Apple iPhone", "The new smartphone by Apple ", 40));
-        products.add(new Product(2,"Lenovo ThinkPad", "The new ThinkPad by Lenovo ", 58));
-        products.add(new Product(3,"Beats by Dre", "Headphones by Dr Dre", 5));
+        products.add(new Product("P1","Apple iPhone", "Apple","Smartphone", "The new smartphone by Apple ",new BigDecimal("200.45"), 40L));
+        products.add(new Product("P2","Lenovo ThinkPad", "Lenovo", "Laptop", "The new ThinkPad by Lenovo ",new BigDecimal("600.45"), 58L));
+        products.add(new Product("P3","Beats by Dre","Apple","Audio", "Headphones by Dr Dre",new BigDecimal("300.55"), 5L));
     }
 
     // list allProducts
@@ -28,7 +29,7 @@ public class ProductDaoService {
 
     public Product saveProduct(Product product){
         if(product.getId()==null){
-            product.setId(++productCount);
+            product.setId(String.format("P"+(++productCount)));
         }
         products.add(product);
         return product;
@@ -37,9 +38,11 @@ public class ProductDaoService {
 
     // Find productById(int id)
 
-    public Product findById(int id){
+    public Product findById(String id){
         for(Product product:products){
-            if(product.getId()==id){
+            String targetProduct = product.getId();
+
+            if(targetProduct.equals(id.toUpperCase())){
                 return product;
             }
         }
