@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Component
@@ -43,6 +44,21 @@ public class ProductDaoService {
             String targetProduct = product.getId();
 
             if(targetProduct.equals(id.toUpperCase())){
+                return product;
+            }
+        }
+        return null;
+    }
+
+    public Product deleteById(String id){
+
+        Iterator<Product> iterator = products.iterator();
+        while(iterator.hasNext()){
+            Product product = iterator.next();
+            String targetProduct = product.getId();
+
+            if(targetProduct.equals(id.toUpperCase())){
+                iterator.remove();
                 return product;
             }
         }

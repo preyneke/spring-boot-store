@@ -53,4 +53,12 @@ public class productResource {
         if(product==null) throw new ProductNotFoundException("id: "+id);
         return product;
     }
+
+    @DeleteMapping(path = "/products/{id}")
+    public void deleteProductById(@PathVariable("id") String id){
+
+        Product product= service.deleteById(id);
+        if(product==null) throw new ProductNotFoundException("id: "+id);
+
+    }
 }
