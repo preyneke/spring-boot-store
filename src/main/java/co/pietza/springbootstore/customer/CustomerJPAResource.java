@@ -1,37 +1,37 @@
 package co.pietza.springbootstore.customer;
 
 
-
 import co.pietza.springbootstore.exceptions.CustomerNotFoundException;
-import com.fasterxml.jackson.databind.ser.FilterProvider;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import co.pietza.springbootstore.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
-
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 @RestController
-public class CustomerResource {
+public class CustomerJPAResource {
+
+
 
     @Autowired
-    private CustomerDaoService service;
+    private CustomerRepository customerRepository;
 
 
     // Create Customer
-    @PostMapping("/customers")
+    @PostMapping("/jpa/customers")
     public ResponseEntity<Object> saveCustomer(@Valid @RequestBody Customer customer){
 
-        Customer savedCustomer = service.saveCustomer(customer);
+        Customer savedCustomer = customerRepository.save(customer);
 
         // CREATED
 
@@ -45,10 +45,10 @@ public class CustomerResource {
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/customers")
+    @GetMapping("/jpa/customers")
     public List<Customer> allCustomers(){
 
-        List<Customer> allCustomers = service.allCustomers();
+        List<Customer> allCustomers = customerRepository.findAll();
 
 
 
@@ -59,29 +59,31 @@ public class CustomerResource {
     }
 
     // Get customer by Id
-    @GetMapping("/customers/{custId}")
+    @GetMapping("/jpa/customers/{custId}")
     public Resource<Customer> findCustomerById(@PathVariable("custId") String custId){
-        Customer customer = service.findCustomerById(custId);
+        Optional<Customer> customer = customerRepository.findById(custId.toUpperCase());
 
-        if(customer==null) throw new CustomerNotFoundException("id: "+ custId);
+        if(!customer.isPresent()) {
+            throw new CustomerNotFoundException("id: "+ custId);
+        } else{
+            Customer theCustomer = customer.get();
+            Resource<Customer> resource = new Resource<Customer>(theCustomer);
+            ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).allCustomers());
+            resource.add(linkTo.withRel("all-customers"));
+
+            return resource;
+
+        }
 
 
-
-
-
-        Resource<Customer> resource = new Resource<Customer>(customer);
-        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).allCustomers());
-        resource.add(linkTo.withRel("all-customers"));
-
-        return resource;
     }
 
     // Delete Customer
-    @DeleteMapping("/customers/{custId}")
+    @DeleteMapping("/jpa/customers/{custId}")
     public void deleteCustomerById(@PathVariable("custId") String custId){
-        Customer customer = service.deleteCustomerById(custId);
+        customerRepository.deleteById(custId.toUpperCase());
 
-        if(customer==null) throw new CustomerNotFoundException("id: "+ custId);
+
 
 
     }

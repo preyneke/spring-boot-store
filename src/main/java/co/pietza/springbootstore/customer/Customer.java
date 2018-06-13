@@ -2,15 +2,23 @@ package co.pietza.springbootstore.customer;
 
 import co.pietza.springbootstore.address.Address;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-@JsonFilter("CustomerFilter")
+@Entity
+@Table(name="customer")
 public class Customer {
 
+    @Id
+    @GenericGenerator(name="customer_id", strategy = "co.pietza.springbootstore.generator.CustomerIdGenerator")
+    @GeneratedValue(generator = "customer_id")
+    @Column(name = "customer_id")
     private String cust_id;
 
     @NotEmpty(message = "Name Can Not be be empty")
@@ -18,6 +26,8 @@ public class Customer {
     private String name;
     @Pattern(regexp = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])", message = "Please enter valid e-mail")
     private String email;
+
+    @JsonIgnore
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$", message = "The password policy is:\n" +
             "\n" +
             "At least 8 chars\n" +
@@ -30,6 +40,9 @@ public class Customer {
             "\n" +
             "Does not contain space, tab, etc.")
     private String password;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "billingAddress", referencedColumnName = "address_id")
     private Address billingAddress;
 
     protected Customer(){

@@ -1,15 +1,23 @@
 package co.pietza.springbootstore.address;
 
+import co.pietza.springbootstore.customer.Customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import javax.persistence.*;
+
+@Entity
 public class Address {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonIgnore
+    @Column(name = "address_id")
     private Long addressId;
     private String addressLine1;
     private String addressLine2;
     private String city;
     private String country;
     private int postalCode;
+
 
 
     public Address(){
@@ -75,5 +83,19 @@ public class Address {
 
     public void setPostalCode(int postalCode) {
         this.postalCode = postalCode;
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "addressId=" + addressId +
+                ", addressLine1='" + addressLine1 + '\'' +
+                ", addressLine2='" + addressLine2 + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", postalCode=" + postalCode +
+                '}';
     }
 }

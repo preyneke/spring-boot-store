@@ -1,19 +1,33 @@
 package co.pietza.springbootstore.Product;
 
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.validation.constraints.*;
 import java.math.BigDecimal;
-
+@Entity
 public class Product {
 
+    @Id
+    @GenericGenerator(name="product_id", strategy = "co.pietza.springbootstore.generator.ProductIdGenerator")
+    @GeneratedValue(generator = "product_id")
+    @Column(name = "product_id")
     private String id;
+    @Column(name = "name")
     @NotEmpty(message = "please enter product name")
     @Size(min=2, message = "Please enter product name with at least 2 characters")
     private String name;
 
+    @Column(name = "manufacturer")
     private String manufacturer;
 
+    @Column(name = "category")
     private String category;
 
+    @Column(name="description")
     private String description;
 
     @Min(value = 1)
@@ -54,6 +68,22 @@ public class Product {
         this.name = name;
     }
 
+    public String getManufacturer() {
+        return manufacturer;
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.manufacturer = manufacturer;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -78,29 +108,15 @@ public class Product {
         this.unitsInStock = unitsInStock;
     }
 
-    public String getManufacturer() {
-        return manufacturer;
-    }
-
-    public void setManufacturer(String manufacturer) {
-        this.manufacturer = manufacturer;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", category='" + category + '\'' +
                 ", description='" + description + '\'' +
-                ", unitPrice='" + unitPrice + '\'' +
+                ", unitPrice=" + unitPrice +
                 ", unitsInStock=" + unitsInStock +
                 '}';
     }
