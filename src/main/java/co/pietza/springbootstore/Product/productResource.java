@@ -2,6 +2,10 @@ package co.pietza.springbootstore.Product;
 
 import co.pietza.springbootstore.exceptions.ProductNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -47,12 +51,16 @@ public class productResource {
 
     // findById
     @GetMapping(path = "/products/{id}")
-    public Product findById(@PathVariable("id") String id){
+    public Resource<Product> findById(@PathVariable("id") String id){
 
         Product product= service.findById(id);
 
         if(product==null) throw new ProductNotFoundException("id: "+id);
-        return product;
+        Resource<Product> resource = new Resource<Product>(product);
+        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retrieveAll());
+        resource.add(linkTo.withRel("all-products"));
+
+        return resource;
     }
 
     @DeleteMapping(path = "/products/{id}")

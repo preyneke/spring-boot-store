@@ -1,9 +1,13 @@
 package co.pietza.springbootstore.customer;
 
 
-import co.pietza.springbootstore.Product.ProductDaoService;
+
 import co.pietza.springbootstore.exceptions.CustomerNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
+
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -45,12 +49,16 @@ public class CustomerResource {
 
     // Get customer by Id
     @GetMapping("/customers/{custId}")
-    public Customer findCustomerById(@PathVariable("custId") String custId){
+    public Resource<Customer> findCustomerById(@PathVariable("custId") String custId){
         Customer customer = service.findCustomerById(custId);
 
         if(customer==null) throw new CustomerNotFoundException("id: "+ custId);
 
-        return customer;
+        Resource<Customer> resource = new Resource<Customer>(customer);
+        ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).allCustomers());
+        resource.add(linkTo.withRel("all-customers"));
+
+        return resource;
     }
 
     // Delete Customer

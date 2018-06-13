@@ -1,6 +1,8 @@
 package co.pietza.springbootstore.customer;
 
-import javax.validation.constraints.Digits;
+import co.pietza.springbootstore.address.Address;
+
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -26,27 +28,20 @@ public class Customer {
             "\n" +
             "Does not contain space, tab, etc.")
     private String password;
-    private String addressLine1;
-    private String addressLine2;
-    private String city;
-    private String country;
-    @Digits(integer = 4, fraction = 0)
-    private Integer postalCode;
+    private Address billingAddress;
 
     protected Customer(){
+        this.billingAddress = new Address();
 
     }
 
-    public Customer(String cust_id, String name, String email, String password, String addressLine1, String addressLine2, String city, String country, Integer postalCode) {
+    public Customer(String cust_id, String name, String email, String password, Address billingAddress) {
         this.cust_id = cust_id;
         this.name = name;
         this.email = email;
         this.password = password;
-        this.addressLine1 = addressLine1;
-        this.addressLine2 = addressLine2;
-        this.city = city;
-        this.country = country;
-        this.postalCode = postalCode;
+        this.billingAddress = billingAddress;
+
     }
 
     public String getCust_id() {
@@ -81,58 +76,11 @@ public class Customer {
         this.password = password;
     }
 
-    public String getAddressLine1() {
-        return addressLine1;
+    public Address getBillingAddress() {
+        return billingAddress;
     }
 
-    public void setAddressLine1(String addressLine1) {
-        this.addressLine1 = addressLine1;
-    }
-
-    public String getAddressLine2() {
-        return addressLine2;
-    }
-
-    public void setAddressLine2(String addressLine2) {
-        this.addressLine2 = addressLine2;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCountry() {
-        return country;
-    }
-
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    public Integer getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(Integer postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "cust_id='" + cust_id + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", addressLine1='" + addressLine1 + '\'' +
-                ", addressLine2='" + addressLine2 + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", postalCode=" + postalCode +
-                '}';
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
     }
 }
