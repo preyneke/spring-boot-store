@@ -3,12 +3,16 @@ package co.pietza.springbootstore.customer;
 
 
 import co.pietza.springbootstore.exceptions.CustomerNotFoundException;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -42,9 +46,20 @@ public class CustomerResource {
     }
 
     @GetMapping("/customers")
-    public List<Customer> allCustomers(){
+    public MappingJacksonValue allCustomers(){
 
-        return service.allCustomers();
+        List<Customer> allCustomers = service.allCustomers();
+
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("cus_id","name", "email", "billingAddress");
+        FilterProvider filters = new SimpleFilterProvider().addFilter("CustomerFilter", filter);
+        MappingJacksonValue mapping = new MappingJacksonValue(allCustomers);
+
+        mapping.setFilters(filters);
+
+
+
+        return mapping;
+
     }
 
     // Get customer by Id

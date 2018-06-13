@@ -1,12 +1,14 @@
 package co.pietza.springbootstore.customer;
 
 import co.pietza.springbootstore.address.Address;
+import com.fasterxml.jackson.annotation.JsonFilter;
 
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+@JsonFilter("CustomerFilter")
 public class Customer {
 
     private String cust_id;

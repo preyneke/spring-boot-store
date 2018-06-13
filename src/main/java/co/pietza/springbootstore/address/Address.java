@@ -1,6 +1,9 @@
 package co.pietza.springbootstore.address;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Address {
+    @JsonIgnore
     private Long addressId;
     private String addressLine1;
     private String addressLine2;
