@@ -1,0 +1,13 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="navigation">
+
+    <li><a th:href="@{'~' + ${flowExecutionUrl} + '&_eventId_home'}" class="btn btn-danger">Home</a></li>
+
+<li><a href="<spring:url value="/market/products/"/>">Products</a>
+<li><a href="<spring:url value="/market/products/add"/>">Add Product</a>
+<li><a href="<spring:url value="/cart/"/>">Cart</a>
+<li><a href="<spring:url value="/createcustomer"/>">Add Customer</a>
+</nav>
+</html>
